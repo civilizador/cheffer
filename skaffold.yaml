@@ -1,0 +1,19 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests: # List of manifests(kubernetis config files)
+      - ./infra/k8s/*
+build:  # Build section will describe Our Cluster configuration
+  googleCloudBuild:
+    projectId: cheffer-285816
+  artifacts:
+    - image: gcr.io/cheffer-285816/auth
+      context: auth 
+      docker:
+        dockerfile: Dockerfile
+      sync: # indicates which files to watch for changes
+        manual:
+          - src: src/**/*.ts # all .ts files should be monitored.
+            # here dest shows taht the modified file should be into the same directory it came from
+            dest: .

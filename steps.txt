@@ -1,0 +1,88 @@
+AUTH SERVICE
+
+Setting up the Base: 
+
+    1.  Create auth directory
+    2.  npm init -y
+    3.  npm install --save express typescript ts-node-dev @types/express
+    4.  tsc --init
+
+    1.  Create src directory
+    2.  Create index.ts
+    3.  In the package.json replace "test" script with:
+            "start": "ts-node-dev ./src/index.ts"
+
+Creating Docker and Kubernetis config files:
+
+    1.  In the root dir create Dockerfile
+            FROM node:alpine
+            WORKDIR /app
+            COPY . .
+            RUN apk upgrade
+            RUN npm install
+            CMD ["npm","start"]
+    2.  Inside of Infra/k8 create a deployment/service configuration file for Kubernetis :
+        
+        auth-depl.yaml
+
+            apiVersion: apps/v1
+            kind: Deployment
+            # This "metadata" gives a name for the actual deployment itself
+            metadata:
+            name: auth-depl
+            spec:
+                replicas: 1
+                selector:
+                #  matchLabel: tells what pods the deployment will apply to.
+                    matchLabels:
+                    app: auth
+                template:
+                # "template" here explaining how each POD inside of the deployment will be created.
+                # The "template" is actually a pod Template. It describes a pod that is launched.
+                    metadata:
+                    labels:
+                        app: auth
+                    spec: 
+                    containers:
+                        - name: auth 
+                        image: civilizador/auth_service:0.0.1
+            ---
+            # AUTH SERVICE  DEFINITION
+
+                apiVersion: v1
+                kind: Service 
+                metadata:
+                    name: auth-srv
+                    spec:
+                    selector:
+                        app: auth
+                ports:
+                    - name: auth
+                    protocol: TCP 
+                    port: 3000
+                    targetPort: 3000
+    3.  Create a Skaffold config file inside of the service root directory:
+        skaffold.yaml 
+
+        apiVersion: skaffold/v2alpha3
+        kind: Config
+        deploy: # will list all config files we want to load into our Cluster
+            kubectl:
+                manifests:
+                    - ./infra/k8s/*
+        build:
+            local:
+                push: false
+            artifacts: # artifacts section indicates what are output files would be. In our case it's Docker image
+                -
+                    image: civilizador/auth
+                    context: auth 
+                    docker:
+                        dockerfile: Dockerfile
+                    sync: # indicates which files to watch for changes
+                        manual:
+                            - 
+                                src: 'src/**/*.ts' # all .ts files should be monitored.
+                                dest: .
+                        
+                            
