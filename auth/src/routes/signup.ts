@@ -23,7 +23,7 @@ router.post('/api/users/signup',[
             return res.status(400).send(errors.array())
         }
         const { email,password} = req.body;
-        res.send(`email: ${email} has been Registered`)
+        res.send(`email: ${email} has been Registered with password: ${password}`)
 });
 
 export { router as signupRouter }; 
