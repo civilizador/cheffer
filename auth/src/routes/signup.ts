@@ -19,9 +19,12 @@ router.post('/api/users/signup',[
     ], 
     (req: Request,res: Response) => {
         const errors = validationResult(req);
+
         if(!errors.isEmpty()){
-            return res.status(400).send(errors.array())
+            throw new Error('Invalid email or Password')
         }
+        
+
         const { email,password} = req.body;
         res.send(`email: ${email} has been Registered with password: ${password}`)
 });

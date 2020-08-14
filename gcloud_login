@@ -1,1 +1,3 @@
 gcloud auth application-default login
+
+$env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\asalim201\Desktop\Study\Microservices\cheffer-2b65c3f4ecac.json"

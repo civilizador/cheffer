@@ -84,5 +84,10 @@ Creating Docker and Kubernetis config files:
                             - 
                                 src: 'src/**/*.ts' # all .ts files should be monitored.
                                 dest: .
-                        
+Handling Errors
+    1.  Under src folder create "middleware" directory
+    2.  Create error-handler.ts file 
+    3.  Define errorHandler function that will accept 4 arguments (err, req, res, next)
+    4.  Export types for each argument from "express" and define type annotations for each argument
+    5.  Import your errorHandler to index.ts file
                             
