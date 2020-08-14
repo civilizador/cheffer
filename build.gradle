@@ -1,0 +1,33 @@
+
+
+plugins {
+  id "com.github.node-gradle.node" version "2.2.4"
+}
+// In case there is no NODEJS and NPM installed we can instruct plugin 
+//  to download and install nodeJS and NPM
+node {
+    download = true
+}
+         
+task build 
+build.dependsOn npm_build
+npm_build.dependsOn npmInstall
+// npm_build.dependsOn npm_test
+// npm_test.dependsOn npmInstall
+ 
+task zip(type: Zip) {
+    from '.'
+    include "*" // will include all files inside of the root directory but not the subfolders
+    include "bin/**"
+    include "data/**"
+    include "node_modules/**"
+    include "public/**"
+    include "routes/**"
+    include "views/**"
+    baseName = "cheffer"
+    archiveName 'cheffer.zip'
+    destinationDir(file("dist"))
+}
+// making sure that all of the code is ready before zipping :
+zip.dependsOn npm_build 
+ 
