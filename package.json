@@ -1,0 +1,24 @@
+{
+  "name": "cheffer",
+  "version": "1.0.0",
+  "description": "home_food_trading_Platform fr developing countries market",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-validator": "^6.6.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/civilizador/cheffer.git"
+  },
+  "author": "Asim Salimli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/civilizador/cheffer/issues"
+  },
+  "homepage": "https://github.com/civilizador/cheffer#readme"
+}
