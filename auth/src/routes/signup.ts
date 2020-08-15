@@ -3,6 +3,9 @@ import express from "express";
 import {Request,Response} from "express";
 // Importing validation middleware
 import {body,validationResult} from "express-validator";
+// Importing Error Subclasses for each error type
+import {RequestValidationError} from "../errors/request-validation-errors"
+import {DatabaseConnectionError} from "../errors/database-connection-error"
 
 const router = express.Router()
 
@@ -21,12 +24,14 @@ router.post('/api/users/signup',[
         const errors = validationResult(req);
 
         if(!errors.isEmpty()){
-            throw new Error('Invalid email or Password')
+            throw new RequestValidationError(errors.array())
         }
-        
-
         const { email,password} = req.body;
         res.send(`email: ${email} has been Registered with password: ${password}`)
+
+        console.log("Creating a user ...");
+        throw new DatabaseConnectionError();
+ 
 });
 
 export { router as signupRouter }; 
