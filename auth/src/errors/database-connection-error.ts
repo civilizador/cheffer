@@ -1,4 +1,7 @@
-export class DatabaseConnectionError extends Error {
+// Importing our CustomError abstract class that defines a pattern for DatabaseConnectionError .
+import {CustomError} from './custom-error'
+
+export class DatabaseConnectionError extends CustomError {
     // For DB connection errors we will define static error message to display
     reason = 'Error connecting to the Database'
     statusCode = 500;
