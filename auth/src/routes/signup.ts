@@ -26,12 +26,12 @@ router.post('/api/users/signup',[
         if(!errors.isEmpty()){
             throw new RequestValidationError(errors.array())
         }
-        const { email,password} = req.body;
-        res.send(`email: ${email} has been Registered with password: ${password}`)
-
+        // FOr now since there is no DB connection we will throw DB connection error
         console.log("Creating a user ...");
         throw new DatabaseConnectionError();
  
+        const { email,password} = req.body;
+        res.send(`email: ${email} has been Registered with password: ${password}`)
 });
 
 export { router as signupRouter }; 
