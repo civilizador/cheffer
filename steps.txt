@@ -90,4 +90,8 @@ Handling Errors
     3.  Define errorHandler function that will accept 4 arguments (err, req, res, next)
     4.  Export types for each argument from "express" and define type annotations for each argument
     5.  Import your errorHandler to index.ts file
-                            
+    6.  Whenever Express catch an error it will send it to error handler 
+
+Creating Mongo DB deployment:
+    1.  Under infra/k8s create a new file to describe mongo-db deployment for AUTH service:
+            auth-mongo-depl.yaml                      

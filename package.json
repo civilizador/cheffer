@@ -4,8 +4,10 @@
   "description": "home_food_trading_Platform fr developing countries market",
   "main": "index.js",
   "dependencies": {
+    "@types/mongoose": "^5.7.36",
     "express": "^4.17.1",
-    "express-validator": "^6.6.1"
+    "express-validator": "^6.6.1",
+    "mongoose": "^5.10.0"
   },
   "devDependencies": {},
   "scripts": {

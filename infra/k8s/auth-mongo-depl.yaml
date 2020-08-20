@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+# This "metadata" gives a label for that actual deployment itself
+metadata:
+  name: auth-mongo-depl
+spec:
+  replicas: 1
+  selector:
+  #  matchLabel: tells what pods the deployment will apply to.
+    matchLabels:
+      app: auth-mongo
+  template:
+  # "template" is explaining how each POD inside of the deployment will be created.
+  # The "template" is actually a pod Template. It describes a pod that is launched.
+    metadata:
+      labels:
+        app: auth-mongo
+    spec: 
+      containers:
+        - name: auth-mongo 
+          image: mongo
+
+---
+
+# AUTH SERVICE  DEFINITION
+
+apiVersion: v1
+kind: Service 
+metadata:
+  name: auth-mongo-srv
+spec:
+  selector:
+    # Describes to which deployment this service applied.
+    app: auth-mongo
+  ports:
+    - name: db
+      protocol: TCP 
+      port: 27017
+      targetPort: 27017
