@@ -5,7 +5,8 @@ import {Request,Response} from "express";
 import {body,validationResult} from "express-validator";
 // Importing Error Subclasses for each error type
 import {RequestValidationError} from "../errors/request-validation-errors"
-import {DatabaseConnectionError} from "../errors/database-connection-error"
+// Importing User Model
+import {User} from '../models/user'
 
 const router = express.Router()
 
@@ -20,18 +21,26 @@ router.post('/api/users/signup',[
         .isString()
         .withMessage('Password must be 4-20 characters long')
     ], 
-    (req: Request,res: Response) => {
+    async (req: Request,res: Response) => {
         const errors = validationResult(req);
 
         if(!errors.isEmpty()){
             throw new RequestValidationError(errors.array())
         }
-        // FOr now since there is no DB connection we will throw DB connection error
-        console.log("Creating a user ...");
-        throw new DatabaseConnectionError();
- 
-        const { email,password} = req.body;
-        res.send(`email: ${email} has been Registered with password: ${password}`)
+        // Extracting email and password from the request
+        const {email, password, name} = req.body;
+        // Querying DB if it has entry for that email
+        const existingUser = await User.findOne({ email });
+
+        if(existingUser){
+            console.log('User with that email already Exists ')
+            return res.send({})
+        }
+
+        // If User doesn't exists go ahead and create a new user
+        const user = User.build({email, password, name})
+        await user.save();
+        res.status(201).send(user)
 });
 
 export { router as signupRouter }; 

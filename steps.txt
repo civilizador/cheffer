@@ -95,3 +95,8 @@ Handling Errors
 Creating Mongo DB deployment:
     1.  Under infra/k8s create a new file to describe mongo-db deployment for AUTH service:
             auth-mongo-depl.yaml                      
+
+Creating MongoDB SCHEMA
+    1.  Create a new directory under "src" called "models"
+    2.  Create file called user.ts 
+    3.  Describe Schema for User model
