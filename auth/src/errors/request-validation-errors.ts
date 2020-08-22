@@ -10,7 +10,7 @@ export class RequestValidationError extends CustomError {
     // We are saving the array of errors we got back from ValidationError array 
     // from express-validator middleware to "errors"
     constructor(public errors: ValidationError[]){
-        super();
+        super('Invalid request parameters');
         // Build in class extention requires following:
         Object.setPrototypeOf(this, RequestValidationError.prototype);
     }

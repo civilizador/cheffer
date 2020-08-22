@@ -1,10 +1,17 @@
+// LIBRARIES
 import express from "express";
 // We are importing Request and Response Classes form express to use them in type Annotations for req and res
 import {Request,Response} from "express";
+
+// ERROR HANDLING
 // Importing validation middleware
 import {body,validationResult} from "express-validator";
 // Importing Error Subclasses for each error type
 import {RequestValidationError} from "../errors/request-validation-errors"
+// For most of the request types we have BadRequestError class of errors:
+import {BadRequestError} from '../errors/bad-request-error'
+
+// DB
 // Importing User Model
 import {User} from '../models/user'
 
@@ -33,8 +40,8 @@ router.post('/api/users/signup',[
         const existingUser = await User.findOne({ email });
 
         if(existingUser){
-            console.log('User with that email already Exists ')
-            return res.send({})
+            console.log('User with that email already Exists')
+            throw new BadRequestError('User with that email already Exists')
         }
 
         // If User doesn't exists go ahead and create a new user
