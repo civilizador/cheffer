@@ -1,4 +1,6 @@
 import mongoose from 'mongoose'
+// Importing Password class that will encrypt/decrypt user provided passwords
+import {Password} from '../services/password'
 
 // Interface that describes properties that a User Model has.
 // We indicate that a "build" method will return an object described in UserDoc interface.
@@ -37,6 +39,19 @@ const userSchema = new mongoose.Schema({
         required: false
     }
 });
+
+//  Now we will add middleware form "Mongoose" library 
+//  It will be called Everytime new User created
+//  Since we are accessing "this" we cannot use arrow function since we will lose context
+userSchema.pre('save', async function(done){
+    if ( this.isModified('password') ){
+        const hashed = await Password.toHash(this.get('password'));
+        this.set('password', hashed);
+    }
+    // We need to call done at the end of async function to avoid unhandled promise rejection crash
+    done()
+
+})
 
 // In order to add type annotations to user creation process.
 // In other words to be able to check that params passed to User model are correct

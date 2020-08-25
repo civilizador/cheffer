@@ -91,6 +91,9 @@ Handling Errors
     4.  Export types for each argument from "express" and define type annotations for each argument
     5.  Import your errorHandler to index.ts file
     6.  Whenever Express catch an error it will send it to error handler 
+    7.  Create different Error classes for each error case and store them inside of the error directory.
+        Note that every error class will be based on generic, skeleton like template class callded CutomError under the same directory
+
 
 Creating Mongo DB deployment:
     1.  Under infra/k8s create a new file to describe mongo-db deployment for AUTH service:
@@ -100,3 +103,38 @@ Creating MongoDB SCHEMA
     1.  Create a new directory under "src" called "models"
     2.  Create file called user.ts 
     3.  Describe Schema for User model
+
+Password Hashing
+    1.  Create new directory services
+    2.  Create new file services/password.ts
+    3.  Define a Password class inside of it.
+        Every time we would need to hash a password we would be calling this class.
+    4.  Define 2 static methods toHash and compare.
+        Static methods are methods that are callable directly from the class 
+        and do not require to create a new instance of the class to call them.
+
+Installing additional libraries for implementing AUTH:
+    1.  Install "cookie-session" and "@types/cookie-session"
+            npm install --save "cookie-session" , "@types/cookie-session"
+    2.  Install jasonwebtoken
+            npm install --save "jasonwebtoken" , "@types/jasonwebtoken"
+    3.  Connect "cookie-session" to our app inside the "index.ts" :
+        secure: true option indicates that cookie will be used only with https connection.
+
+            app.use(cookieSession({
+                signed: false,
+                secure: true
+            }))
+    4.  Generate a jwt tocken and create a new session inside of "signup.ts":
+        
+        // Generate JWT 
+            const userJwt = jwt.sign({
+                id: user.id,
+                email: user.email,
+                name: user.name
+            }, 'ASaede122!!2sme');
+
+        // Store generated JWT inside of the session object
+            req.session = { 
+                jwt: userJwt
+            };

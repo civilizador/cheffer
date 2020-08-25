@@ -2,6 +2,7 @@
 import express from "express";
 // We are importing Request and Response Classes form express to use them in type Annotations for req and res
 import {Request,Response} from "express";
+import jwt from 'jsonwebtoken';
 
 // ERROR HANDLING
 // Importing validation middleware
@@ -47,6 +48,20 @@ router.post('/api/users/signup',[
         // If User doesn't exists go ahead and create a new user
         const user = User.build({email, password, name})
         await user.save();
+
+        // Generate JWT 
+        const userJwt = jwt.sign({
+            id: user.id,
+            email: user.email,
+            name: user.name
+        }, 'ASaede122!!2sme');
+
+        // Store generated JWT inside of the session object
+        
+        req.session = { 
+            jwt: userJwt
+        };
+
         res.status(201).send(user)
 });
 

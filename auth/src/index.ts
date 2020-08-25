@@ -1,8 +1,9 @@
 // Importing standart libraries
-import express from 'express'
-import {json} from 'body-parser'
-import mongoose from 'mongoose'
+import express from 'express';
+import {json} from 'body-parser';
+import mongoose from 'mongoose';
 import 'express-async-errors';
+import cookieSession from "cookie-session";
 // THe Application libraries
 import {currentUserRouter} from './routes/current-user'
 import {signoutRouter} from './routes/signout'
@@ -10,12 +11,19 @@ import {signupRouter} from './routes/signup'
 import {signinRouter} from './routes/signin'
 import {errorHandler} from './middlewares/error-handler'
 
+
 // Exporting Error message to send when user tries to reach page that do not exists
 import {NotFoundError} from './errors/not-found-error'
 
 
 const app = express()
+app.set('trust proxy', true);
 app.use(json());
+
+app.use(cookieSession({
+    signed: false,
+    secure: true
+}))
 
 // Get User route
 app.use(currentUserRouter);
