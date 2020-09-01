@@ -6,11 +6,11 @@ import jwt from 'jsonwebtoken';
 
 // ERROR HANDLING
 // Importing validation middleware
-import {body,validationResult} from "express-validator";
-// Importing Error Subclasses for each error type
-import {RequestValidationError} from "../errors/request-validation-errors"
+import {body} from "express-validator";
 // For most of the request types we have BadRequestError class of errors:
 import {BadRequestError} from '../errors/bad-request-error'
+// Our middleware to validate requests from User
+import {validateRequest} from '../middlewares/validateRequest'
 
 // DB
 // Importing User Model
@@ -29,12 +29,8 @@ router.post('/api/users/signup',[
         .isString()
         .withMessage('Password must be 4-20 characters long')
     ], 
+    validateRequest,
     async (req: Request,res: Response) => {
-        const errors = validationResult(req);
-
-        if(!errors.isEmpty()){
-            throw new RequestValidationError(errors.array())
-        }
         // Extracting email and password from the request
         const {email, password, name} = req.body;
         // Querying DB if it has entry for that email
@@ -50,14 +46,14 @@ router.post('/api/users/signup',[
         await user.save();
 
         // Generate JWT 
+
         const userJwt = jwt.sign({
             id: user.id,
             email: user.email,
             name: user.name
-        }, 'ASaede122!!2sme');
+        }, process.env.JWT_KEY!);
 
         // Store generated JWT inside of the session object
-        
         req.session = { 
             jwt: userJwt
         };

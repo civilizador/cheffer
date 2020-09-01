@@ -1,46 +1,10 @@
-// Importing standart libraries
-import express from 'express';
-import {json} from 'body-parser';
 import mongoose from 'mongoose';
-import 'express-async-errors';
-import cookieSession from "cookie-session";
-// THe Application libraries
-import {currentUserRouter} from './routes/current-user'
-import {signoutRouter} from './routes/signout'
-import {signupRouter} from './routes/signup'
-import {signinRouter} from './routes/signin'
-import {errorHandler} from './middlewares/error-handler'
-
-
-// Exporting Error message to send when user tries to reach page that do not exists
-import {NotFoundError} from './errors/not-found-error'
-
-
-const app = express()
-app.set('trust proxy', true);
-app.use(json());
-
-app.use(cookieSession({
-    signed: false,
-    secure: true
-}))
-
-// Get User route
-app.use(currentUserRouter);
-app.use(signupRouter);
-app.use(signinRouter);
-app.use(signoutRouter);
-
-// If the defined routes matched create a new NotFoundError error.
-// Express will capture a new Error event and pass it to errorHandler.
-// app.all means that all methods will match (GET, POST, UPDATE)
-app.all('*',(req,res,next) => {
-    next(new NotFoundError());
-})
-
-app.use(errorHandler);
+import {app} from './app';
 
 const start = async () => {
+    if(!process.env.JWT_KEY){
+        throw new Error('Error JWT key undefined.')
+    }
     try{
         await mongoose.connect('mongodb://auth-mongo-srv:27017/auth', {
             useNewUrlParser: true,

@@ -2,5 +2,5 @@ FROM node:alpine
 WORKDIR /app
 COPY . .
 RUN apk upgrade
-RUN npm install 
+RUN npm install --only=prod
 CMD ["npm","start"]

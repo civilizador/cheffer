@@ -1,4 +1,5 @@
-// Importing our CustomError abstract class that defines a pattern for RequestValidationError .
+// Importing our CustomError abstract class 
+// Which defines how output of any error should be in our APP.
 import {CustomError} from './custom-error'
 
 export class NotFoundError extends CustomError{

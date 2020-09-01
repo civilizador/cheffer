@@ -25,20 +25,37 @@ interface UserDoc extends mongoose.Document {
     // createdAt: string;
 }
 
-const userSchema = new mongoose.Schema({
-    email: {
-        type: String,
-        required: true
+const userSchema = new mongoose.Schema(
+    {
+        email: {
+            type: String,
+            required: true
+        },
+        password: {
+            type: String,
+            required: true
+        },
+        name: {
+            type: String,
+            required: false
+        }
     },
-    password: {
-        type: String,
-        required: true
-    },
-    name: {
-        type: String,
-        required: false
-    }
-});
+    {
+        toJSON: {
+           transform(doc,ret){
+            // writing value of _id property from DB to output object   
+               ret.id = ret._id;
+            // then deleting original _id property replacing it with just (.id) property
+            // to fit output for othe DB syntax standards:
+                delete ret._id
+            //    will remove property from any DB response.
+                delete ret.password;
+            // deleting unneccessarry for us DB record properties
+                delete ret.__v
+           } 
+        }
+    } 
+);
 
 //  Now we will add middleware form "Mongoose" library 
 //  It will be called Everytime new User created
